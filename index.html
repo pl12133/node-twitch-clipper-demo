@@ -18,15 +18,18 @@
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
   </head>
   <body>
-    <div style="width: 90%; height: auto; margin: 0 auto">
-      <p>Words Here</p>
-      <form onSubmit="getFormAndSave()">
+    <div style="width: 90%; height: auto; margin: 5% auto">
+      <h1 style="text-align: center">Twitch Clipper Demo</h1>
+      <form id="videoForm" style="display: table; margin: 0 auto">
         <input type="text" value='VOD ID String' />
         <input type="text" value='Video Filename' />
         <input type="text" value='Start Time' />
         <input type="text" value='Duration' />
         <button type="submit">Save Video</button>
       </form>
+      <p style="text-align: center" id="saveStatus">
+        Words Here
+      </p>
     </div>
     
     <script>
@@ -35,10 +38,13 @@
       socket.on('handshake-resp', function(result) {
         console.log('result: '+result);
       });
-      socket.on('saveM3U-resp', function(filename) {
-        console.log('Saved video to ' + filename);
+      socket.on('saveM3U-resp', function(resp) {
+        document.getElementById('saveStatus').innerHTML = resp;
+        console.log(resp);
       });
-      function getFormAndSave() {
+      document.getElementById('videoForm').addEventListener('submit', getFormAndSave);
+      function getFormAndSave(e) {
+        e.preventDefault();
         var inputs = document.getElementsByTagName('input');
         var vodIdStr = inputs[0].value;
         var filename = inputs[1].value;
@@ -47,7 +53,6 @@
         serverSaveM3U(vodIdStr, filename, startTime, duration)
       }
       function serverSaveM3U(vodIdStr, filename, startTime, duration) {
-        // socket.emit('saveM3U', '43245884', 'movie-from-server.webm', '00:05:00.000', 15);
         socket.emit('saveM3U', vodIdStr, filename, startTime, duration);
       }
     </script>

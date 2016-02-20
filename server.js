@@ -38,9 +38,15 @@ let addSocketHandler = (method, socket) => {
 function handleSaveM3U(socket) {
   return function() {
     let promiseToSave = saveM3U.apply(saveM3U, arguments);
-    promiseToSave.then((filename) => {
-      socket.emit('saveM3U-resp', filename);
-    })
+    socket.emit('saveM3U-resp', 'Trying to save video... this could take a long time');
+    promiseToSave
+      .then((filename) => {
+        socket.emit('saveM3U-resp', `Saved to: <a href=\"${filename}\">${filename}</a>`);
+      })
+      .catch((error) => {
+        socket.emit('saveM3U-resp', `An error occured, save failed`);
+        console.error('handleSaveM3U ERR: ', error);
+      })
   }
 }
 io.sockets.on('connection', function (socket) {
