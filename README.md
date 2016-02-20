@@ -20,4 +20,4 @@ Make sure you also have [node-twitch-clipper](https://github.com/pl12133/node-tw
 
     npm start
 
-Navigate to http://localhost:8080 and start making clips! Videos will be saved in the `node-twitch-clipper-demo/videos/' folder.
+Navigate to http://localhost:8080 and start making clips! Videos will be saved in the `node-twitch-clipper-demo/videos/` folder.
