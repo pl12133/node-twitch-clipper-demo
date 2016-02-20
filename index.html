@@ -20,6 +20,16 @@
   <body>
     <div style="width: 90%; height: auto; margin: 5% auto">
       <h1 style="text-align: center">Twitch Clipper Demo</h1>
+      <p style="width: 60%; margin: 2% auto">
+        Directions: Find the vodID of the video you want, input a file name to save to, put in the time you want the clip to start, and then put in the duration of the clip in seconds.
+        <br>
+        <br>
+        Example for www.twitch.tv/sjow/v/48022188, to clip starting at 45 minutes and 30 second, for 30 seconds:
+        <br>
+        <code style="margin-top: 1em; display: block; text-align: center; font-weight: bold; word-spacing: 5em">
+          48022188 video-48022188.webm 00:45:30.000 30
+        </code>
+      </p>
       <form id="videoForm" style="display: table; margin: 0 auto">
         <input type="text" value='VOD ID String' />
         <input type="text" value='Video Filename' />
