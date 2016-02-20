@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twitch Video Clipper</title>
+    <meta name="description" content="An app to download clips from Twitch VODs">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="/dist/favicon.ico">
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  </head>
+  <body>
+    <div style="width: 90%; height: auto; margin: 0 auto">
+      <p>Words Here</p>
+      <form onSubmit="getFormAndSave()">
+        <input type="text" value='VOD ID String' />
+        <input type="text" value='Video Filename' />
+        <input type="text" value='Start Time' />
+        <input type="text" value='Duration' />
+        <button type="submit">Save Video</button>
+      </form>
+    </div>
+    
+    <script>
+      var socket = io.connect('http://hearthdraft.net:3000');
+      socket.emit('handshake');
+      socket.on('handshake-resp', function(result) {
+        console.log('result: '+result);
+      });
+      socket.on('saveM3U-resp', function(filename) {
+        console.log('Saved video to ' + filename);
+      });
+      function getFormAndSave() {
+        var inputs = document.getElementsByTagName('input');
+        var vodIdStr = inputs[0].value;
+        var filename = inputs[1].value;
+        var startTime = inputs[2].value;
+        var duration = inputs[3].value;
+        serverSaveM3U(vodIdStr, filename, startTime, duration)
+      }
+      function serverSaveM3U(vodIdStr, filename, startTime, duration) {
+        // socket.emit('saveM3U', '43245884', 'movie-from-server.webm', '00:05:00.000', 15);
+        socket.emit('saveM3U', vodIdStr, filename, startTime, duration);
+      }
+    </script>
+
+  </body>
+</html>
