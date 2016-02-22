@@ -30,14 +30,14 @@ let service = {
   saveM3U: saveM3U
 }
 let addSocketHandler = (method, socket) => {
-  return function() {
-    let result = service[method].apply(service, arguments);
+  return function(...args) {
+    let result = service[method](...args);
     socket.emit(`${method}-resp`, result);
   } 
 }
 function handleSaveM3U(socket) {
-  return function() {
-    let promiseToSave = saveM3U.apply(saveM3U, arguments);
+  return function(...args) {
+    let promiseToSave = saveM3U(...args);
     socket.emit('saveM3U-resp', 'Trying to save video... this could take a long time');
     promiseToSave
       .then((filename) => {
