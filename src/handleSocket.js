@@ -1,3 +1,4 @@
+'use strict';
 function socketSetup() {
   var socket = io.connect('http://hearthdraft.net:3000');
   socket.emit('handshake');
@@ -5,7 +6,20 @@ function socketSetup() {
     console.log('result: '+ result);
   });
   socket.on('saveM3U-resp', function(resp) {
-    document.getElementById('saveStatus').innerHTML = resp;
+    let saveStatusElem = document.getElementById('saveStatus');
+    if (resp.success) {
+      let filename = resp.filename;
+      let fragment = `<p>Video saved to <a href=\"${filename}\">${filename}</a></p>
+        <video controls style=\"width: 70%\">
+          <source src=\"${filename}\" />
+        </video>
+      `;
+      saveStatus.innerHTML = fragment;
+    } else if (resp.failure) {
+      saveStatusElem.innerHTML = 'Sorry, an error occurred';
+    } else if (resp.message) {
+      saveStatusElem.innerHTML = resp.message;
+    }
     console.log(resp);
   });
   function serverSaveM3U(vodIdStr, filename, startTime, duration) {

@@ -38,13 +38,20 @@ let addSocketHandler = (method, socket) => {
 function handleSaveM3U(socket) {
   return function(...args) {
     let promiseToSave = saveM3U(...args);
-    socket.emit('saveM3U-resp', 'Trying to save video... this could take a long time');
+    socket.emit('saveM3U-resp', {
+      message: 'Trying to save video... this could take a long time'
+    });
     promiseToSave
       .then((filename) => {
-        socket.emit('saveM3U-resp', `Saved to: <a href=\"${filename}\">${filename}</a>`);
+        socket.emit('saveM3U-resp', {
+          success: true,
+          filename: filename
+        });
       })
       .catch((error) => {
-        socket.emit('saveM3U-resp', `An error occured, save failed`);
+        socket.emit('saveM3U-resp', {
+          failure: true
+        });
         console.error('handleSaveM3U ERR: ', error);
       })
   }
