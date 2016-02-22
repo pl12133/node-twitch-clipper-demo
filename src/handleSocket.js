@@ -1,16 +1,3 @@
-function getFormAndSave(e) {
-  e.preventDefault();
-  var inputs = document.getElementsByTagName('input');
-  var vodIdStr = inputs[0].value;
-  var filename = inputs[1].value;
-  var startTime = inputs[2].value;
-  var duration = inputs[3].value;
-  serverSaveM3U(vodIdStr, filename, startTime, duration)
-}
-function serverSaveM3U(vodIdStr, filename, startTime, duration) {
-  socket.emit('saveM3U', vodIdStr, filename, startTime, duration);
-}
-
 function socketSetup() {
   var socket = io.connect('http://hearthdraft.net:3000');
   socket.emit('handshake');
@@ -21,9 +8,21 @@ function socketSetup() {
     document.getElementById('saveStatus').innerHTML = resp;
     console.log(resp);
   });
+  function serverSaveM3U(vodIdStr, filename, startTime, duration) {
+    socket.emit('saveM3U', vodIdStr, filename, startTime, duration);
+  }
+  return function getFormAndSave(e) {
+    e.preventDefault();
+    var inputs = document.getElementsByTagName('input');
+    var vodIdStr = inputs[0].value;
+    var filename = inputs[1].value;
+    var startTime = inputs[2].value;
+    var duration = inputs[3].value;
+    serverSaveM3U(vodIdStr, filename, startTime, duration)
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function(e) {
-  socketSetup();
+  var getFormAndSave = socketSetup();
   document.getElementById('videoForm').addEventListener('submit', getFormAndSave);
 });
