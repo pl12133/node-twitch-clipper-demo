@@ -1,6 +1,7 @@
 'use strict';
+const socketAddress = 'http://localhost:3000';
 function socketSetup() {
-  var socket = io.connect('http://hearthdraft.net:3000');
+  var socket = io.connect(socketAddress);
   socket.emit('handshake');
   socket.on('handshake-resp', function(result) {
     console.log('result: '+ result);
