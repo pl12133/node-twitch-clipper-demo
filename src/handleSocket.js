@@ -1,20 +1,17 @@
 'use strict';
-const socketAddress = 'http://hearthdraft.net:3000';
 function socketSetup() {
-  var socket = io.connect(socketAddress);
-  socket.emit('handshake');
-  socket.on('handshake-resp', function(result) {
-    console.log('result: '+ result);
-  });
-  socket.on('saveM3U-resp', function(resp) {
+  function fakeSave(resp) {
     let saveStatusElem = document.getElementById('saveStatus');
     if (resp.success) {
       let filename = resp.filename;
-      let fragment = `<p>Video saved to <a href=\"${filename}\">${filename}</a></p>
-        <video controls style=\"width: 70%\">
-          <source src=\"${filename}\" />
-        </video>
-      `;
+      let fragment = 
+        '<p>Video saved to <a href=\"' + filename + '\">' +
+          filename + 
+        '</a></p>' +
+        '<video controls style=\"width: 70%\">' +
+          '<source src=\"' + filename + '\" type=\"video/webm\"/>' +
+        '</video>';
+
       saveStatus.innerHTML = fragment;
     } else if (resp.failure) {
       saveStatusElem.innerHTML = 'Sorry, an error occurred';
@@ -22,9 +19,17 @@ function socketSetup() {
       saveStatusElem.innerHTML = resp.message;
     }
     console.log(resp);
-  });
-  function serverSaveM3U(vodIdStr, filename, startTime, duration) {
-    socket.emit('saveM3U', vodIdStr, filename, startTime, duration);
+  }
+  function fakeServerSaveM3U(vodIdStr, filename, startTime, duration) {
+    fakeSave({
+      message: 'Trying to save video... this could take a long time'
+    });
+    setTimeout(function() {
+      fakeSave({
+        success: true,
+        filename: 'videos/demo-clip.webm'
+      });
+    }, 5000);
   }
   return function getFormAndSave(e) {
     e.preventDefault();
@@ -33,7 +38,7 @@ function socketSetup() {
     var filename = inputs[1].value;
     var startTime = inputs[2].value;
     var duration = inputs[3].value;
-    serverSaveM3U(vodIdStr, filename, startTime, duration)
+    fakeServerSaveM3U(vodIdStr, filename, startTime, duration)
   }
 }
 
