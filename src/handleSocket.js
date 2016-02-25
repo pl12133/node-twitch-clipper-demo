@@ -4,11 +4,14 @@ function socketSetup() {
     let saveStatusElem = document.getElementById('saveStatus');
     if (resp.success) {
       let filename = resp.filename;
-      let fragment = `<p>Video saved to <a href=\"${filename}\">${filename}</a></p>
-        <video controls style=\"width: 70%\">
-          <source src=\"${filename}\" />
-        </video>
-      `;
+      let fragment = 
+        '<p>Video saved to <a href=\"' + filename + '\">' +
+          filename + 
+        '</a></p>' +
+        '<video controls style=\"width: 70%\">' +
+          '<source src=\"' + filename + '\" type=\"video/webm\"/>' +
+        '</video>';
+
       saveStatus.innerHTML = fragment;
     } else if (resp.failure) {
       saveStatusElem.innerHTML = 'Sorry, an error occurred';
@@ -21,7 +24,7 @@ function socketSetup() {
     fakeSave({
       message: 'Trying to save video... this could take a long time'
     });
-    setTimeout(() => {
+    setTimeout(function() {
       fakeSave({
         success: true,
         filename: 'videos/demo-clip.webm'
